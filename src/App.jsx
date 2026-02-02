@@ -57,32 +57,51 @@ function App() {
   };
 
   return (
-    <div className="p-4">
-      <TemplateSelector setTemplate={setTemplate} />
+    <div className="min-h-screen">
+      {/* Header */}
+      <div className="p-4 bg-white border-b border-gray-200">
+        <TemplateSelector setTemplate={setTemplate} />
+      </div>
 
-      {/* Responsive Layout */}
-      <div
-        className="
-          flex
-          flex-col            // Mobile: stacked
-          gap-6
-          lg:flex-row         // Desktop: side by side
-        "
-      >
-        {/* Form */}
-        <div className="w-full lg:w-1/2">
-          <StructuredForm data={resumeData} setData={setResumeData} />
+      {/* Main Content - Responsive Layout */}
+      <div className="flex-1">
+        {/* Desktop/Tablet: Split Screen */}
+        <div className="hidden lg:flex h-[calc(100vh-80px)]">
+          {/* Form - Scrollable */}
+          <div className="w-1/2 overflow-y-auto">
+            <div className="p-4">
+              <StructuredForm data={resumeData} setData={setResumeData} />
+            </div>
+          </div>
+
+          {/* Preview - Fixed */}
+          <div className="w-1/2 overflow-y-auto bg-gray-50">
+            <div className="p-4">
+              <Preview
+                data={resumeData}
+                template={template}
+                fontSize={fontSize}
+                setFontSize={setFontSize}
+                fontSizeConfig={fontSizeConfig[fontSize]}
+              />
+            </div>
+          </div>
         </div>
 
-        {/* Preview */}
-        <div className="w-full lg:w-1/2">
-          <Preview
-            data={resumeData}
-            template={template}
-            fontSize={fontSize}
-            setFontSize={setFontSize}
-            fontSizeConfig={fontSizeConfig[fontSize]}
-          />
+        {/* Mobile: Original Stacked Layout */}
+        <div className="lg:hidden">
+          <div className="p-4">
+            <StructuredForm data={resumeData} setData={setResumeData} />
+          </div>
+          <div className="p-4 bg-gray-50">
+            <Preview
+              data={resumeData}
+              template={template}
+              fontSize={fontSize}
+              setFontSize={setFontSize}
+              fontSizeConfig={fontSizeConfig[fontSize]}
+            />
+          </div>
         </div>
       </div>
     </div>
