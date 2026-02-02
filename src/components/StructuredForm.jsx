@@ -541,13 +541,13 @@ export default function StructuredForm({ data, setData }) {
       {/* Technical Skills Section */}
       <div className="mb-8 p-6 border border-gray-200 rounded-lg">
         <h3 className="text-xl font-semibold text-indigo-700 mb-4">Technical Skills</h3>
-        <div className="flex gap-2 mb-4">
+        <div className="mb-4">
           <input
             placeholder="Add a technical skill (e.g., JavaScript, Python, React, AWS)"
             value={currentTechnicalSkill}
             onChange={(e) => setCurrentTechnicalSkill(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && addTechnicalSkill()}
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-md"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md mb-2"
           />
           <button
             onClick={addTechnicalSkill}
@@ -574,13 +574,13 @@ export default function StructuredForm({ data, setData }) {
       {/* Non-Technical Skills Section */}
       <div className="mb-8 p-6 border border-gray-200 rounded-lg">
         <h3 className="text-xl font-semibold text-indigo-700 mb-4">Non-Technical Skills</h3>
-        <div className="flex gap-2 mb-4">
+        <div className="mb-4">
           <input
             placeholder="Add a non-technical skill (e.g., Project Management, Communication, Leadership)"
             value={currentNonTechnicalSkill}
             onChange={(e) => setCurrentNonTechnicalSkill(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && addNonTechnicalSkill()}
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-md"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md mb-2"
           />
           <button
             onClick={addNonTechnicalSkill}
@@ -749,13 +749,13 @@ export default function StructuredForm({ data, setData }) {
       {/* Achievements Section */}
       <div className="mb-8 p-6 border border-gray-200 rounded-lg">
         <h3 className="text-xl font-semibold text-indigo-700 mb-4">Achievements</h3>
-        <div className="flex gap-2 mb-4">
+        <div className="mb-4">
           <input
             placeholder="Add an achievement or award"
             value={currentAchievement}
             onChange={(e) => setCurrentAchievement(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && addAchievement()}
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-md"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md mb-2"
           />
           <button
             onClick={addAchievement}
@@ -827,13 +827,13 @@ export default function StructuredForm({ data, setData }) {
       {/* Interests Section */}
       <div className="mb-8 p-6 border border-gray-200 rounded-lg">
         <h3 className="text-xl font-semibold text-indigo-700 mb-4">Personal Interests & Hobbies</h3>
-        <div className="flex gap-2 mb-4">
+        <div className="mb-4">
           <input
             placeholder="Add an interest or hobby"
             value={currentInterest}
             onChange={(e) => setCurrentInterest(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && addInterest()}
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-md"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md mb-2"
           />
           <button
             onClick={addInterest}
