@@ -245,7 +245,7 @@ export default function StructuredForm({ data, setData }) {
     setData(formattedData);
   }, [experiences, educationItems, technicalSkills, nonTechnicalSkills, certifications, projects, achievements, languages, interests, data.name, data.email, data.phone, data.linkedin, data.summary, setData]);
 
-  // Simple and reliable PDF download
+  // Simple and reliable PDF download with color conversion
   const downloadPDF = async (buttonElement) => {
     const element = document.getElementById("resume-preview");
     if (!element) {
@@ -262,6 +262,31 @@ export default function StructuredForm({ data, setData }) {
         buttonElement.disabled = true;
       }
 
+      // Convert unsupported color formats before PDF generation
+      const convertColors = (element) => {
+        const elementsWithColor = element.querySelectorAll('*');
+        elementsWithColor.forEach(el => {
+          const style = window.getComputedStyle(el);
+          const color = style.color;
+          const bgColor = style.backgroundColor;
+          const borderColor = style.borderColor;
+
+          // Convert oklch colors to fallback colors
+          if (color && color.includes('oklch')) {
+            el.style.color = '#000000'; // Fallback to black
+          }
+          if (bgColor && bgColor.includes('oklch')) {
+            el.style.backgroundColor = '#ffffff'; // Fallback to white
+          }
+          if (borderColor && borderColor.includes('oklch')) {
+            el.style.borderColor = '#e5e7eb'; // Fallback to gray
+          }
+        });
+      };
+
+      // Apply color conversion
+      convertColors(element);
+
       // Simple configuration that should work
       const opt = {
         margin: 10,
@@ -270,7 +295,8 @@ export default function StructuredForm({ data, setData }) {
         html2canvas: { 
           scale: 2,
           useCORS: true,
-          logging: false
+          logging: false,
+          backgroundColor: '#ffffff'
         },
         jsPDF: { 
           unit: 'mm',
