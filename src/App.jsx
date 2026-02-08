@@ -11,7 +11,8 @@ function App() {
     summary: "",
     skills: "",
     education: "",
-    experience: ""
+    experience: "",
+    profileImage: ""
   });
 
   const [template, setTemplate] = useState("template1");
@@ -70,7 +71,7 @@ function App() {
           {/* Form - Scrollable */}
           <div className="w-1/2 overflow-y-auto">
             <div className="p-4">
-              <StructuredForm data={resumeData} setData={setResumeData} />
+              <StructuredForm data={resumeData} setData={setResumeData} template={template} />
             </div>
           </div>
 
@@ -91,7 +92,7 @@ function App() {
         {/* Mobile: Original Stacked Layout */}
         <div className="lg:hidden">
           <div className="p-4">
-            <StructuredForm data={resumeData} setData={setResumeData} />
+            <StructuredForm data={resumeData} setData={setResumeData} template={template} />
           </div>
           <div className="p-4 bg-gray-50">
             <Preview
