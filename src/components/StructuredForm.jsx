@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import html2pdf from "html2pdf.js";
 
-export default function StructuredForm({ data, setData }) {
+export default function StructuredForm({ data, setData, template }) {
   // State for managing individual items
   const [experiences, setExperiences] = useState([]);
   const [educationItems, setEducationItems] = useState([]);
@@ -12,6 +12,7 @@ export default function StructuredForm({ data, setData }) {
   const [achievements, setAchievements] = useState([]);
   const [languages, setLanguages] = useState([]);
   const [interests, setInterests] = useState([]);
+  const [profileImage, setProfileImage] = useState(data.profileImage || "");
 
   // Form states for adding new items
   const [currentExperience, setCurrentExperience] = useState({
@@ -57,7 +58,29 @@ export default function StructuredForm({ data, setData }) {
   // Basic info handlers
   const handleBasicInfoChange = (e) => {
     const { name, value } = e.target;
-    setData(prev => ({ ...prev, [name]: value }));
+    setData(prev => ({
+      ...prev,
+      [name]: value
+      // profileImage is already in prev, so we don't need to set it here
+    }));
+  };
+
+  // Profile image handler
+  const handleProfileImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const imageData = reader.result;
+        setProfileImage(imageData);
+        // Update both the local state and parent data with the new image
+        setData(prev => ({
+          ...prev,
+          profileImage: imageData
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   // Experience handlers
@@ -225,6 +248,7 @@ export default function StructuredForm({ data, setData }) {
       phone: data.phone || "",
       linkedin: data.linkedin || "",
       summary: data.summary || "",
+      profileImage: data.profileImage || "",
       experience: experiences.map(exp => 
         `${exp.title} at ${exp.company}${exp.startDate || exp.endDate ? ` (${exp.startDate}${exp.endDate ? ' - ' + exp.endDate : exp.current ? ' - Present' : ''})` : ''}\n${exp.description || ''}`
       ).join('\n\n'),
@@ -329,6 +353,55 @@ export default function StructuredForm({ data, setData }) {
       {/* Personal Details Section */}
       <div className="mb-8 p-6 border border-gray-200 rounded-lg bg-indigo-50">
         <h3 className="text-xl font-semibold text-indigo-700 mb-4">Personal Details</h3>
+        
+        {/* Profile Image Upload - Only show for Template2 */}
+        {template === "template2" && (
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Profile Picture</label>
+            <div className="flex items-center gap-4">
+              {profileImage ? (
+                <div className="relative">
+                  <img 
+                    src={profileImage} 
+                    alt="Profile" 
+                    className="w-20 h-20 rounded-lg object-cover border-2 border-gray-300"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setProfileImage("");
+                      setData(prev => ({ ...prev, profileImage: "" }));
+                    }}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
+                  >
+                    ×
+                  </button>
+                </div>
+              ) : (
+                <div className="w-20 h-20 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center bg-gray-50">
+                  <span className="text-gray-400 text-2xl">👤</span>
+                </div>
+              )}
+              <div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleProfileImageChange}
+                  className="hidden"
+                  id="profileImageUpload"
+                />
+                <label
+                  htmlFor="profileImageUpload"
+                  className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 cursor-pointer text-sm font-medium"
+                >
+                  {profileImage ? "Change Photo" : "Upload Photo"}
+                </label>
+                <p className="text-xs text-gray-500 mt-1">JPG, PNG or GIF (max 5MB)</p>
+              </div>
+            </div>
+          </div>
+        )}
+        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
