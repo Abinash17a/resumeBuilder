@@ -2,6 +2,30 @@ import Template1 from "../templates/template1";
 import Template2 from "../templates/template2";
 import Template3 from "../templates/template3";
 
+// Utility function to format form state for templates
+const formatDataForTemplates = (formData) => {
+  return {
+    ...formData,
+    // Convert arrays of objects back to strings (legacy format for templates)
+    experience: formData.experiences.map(exp => 
+      `${exp.title} at ${exp.company}${exp.startDate || exp.endDate ? ` (${exp.startDate}${exp.endDate ? ' - ' + exp.endDate : exp.current ? ' - Present' : ''})` : ''}\n${exp.description || ''}`
+    ).join('\n\n'),
+    education: formData.educationItems.map(edu => 
+      `${edu.degree}, ${edu.school}${edu.startDate || edu.endDate ? ` (${edu.startDate}${edu.endDate ? ' - ' + edu.endDate : edu.current ? ' - Present' : ''})` : ''}${edu.gpa ? `\nGPA: ${edu.gpa}` : ''}${edu.notes ? `\n${edu.notes}` : ''}`
+    ).join('\n\n'),
+    skills: [...formData.technicalSkills, ...formData.nonTechnicalSkills].join(', '),
+    certifications: formData.certifications.map(cert => 
+      `${cert.name}${cert.issuer ? ` - ${cert.issuer}` : ''}${cert.date ? ` (${cert.date})` : ''}${cert.expiryDate ? ` - Expires: ${cert.expiryDate}` : ''}`
+    ).join('\n'),
+    projects: formData.projects.map(proj => 
+      `${proj.title}\n${proj.description}${proj.technologies ? `\nTechnologies: ${proj.technologies}` : ''}${proj.link ? `\nLink: ${proj.link}` : ''}`
+    ).join('\n\n'),
+    achievements: formData.achievements.join('\n\n'),
+    languages: formData.languages.map(lang => `${lang.language} (${lang.proficiency})`).join(', '),
+    interests: formData.interests.join(', ')
+  };
+};
+
 export default function Preview({
   data,
   template,
@@ -11,9 +35,10 @@ export default function Preview({
 }) {
 
   const renderTemplate = () => {
-    if (template === "template1") return <Template1 data={data} fontSizeConfig={fontSizeConfig} />;
-    if (template === "template2") return <Template2 data={data} fontSizeConfig={fontSizeConfig} />;
-    if (template === "template3") return <Template3 data={data} fontSizeConfig={fontSizeConfig} />;
+    const formattedData = formatDataForTemplates(data);
+    if (template === "template1") return <Template1 data={formattedData} fontSizeConfig={fontSizeConfig} />;
+    if (template === "template2") return <Template2 data={formattedData} fontSizeConfig={fontSizeConfig} />;
+    if (template === "template3") return <Template3 data={formattedData} fontSizeConfig={fontSizeConfig} />;
 
     return (
       <div className="text-center p-6 sm:p-8 text-gray-500">
