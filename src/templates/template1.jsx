@@ -321,7 +321,7 @@ export default function Template1({ data = {}, fontSizeConfig = {}, spacingConfi
 
       {/* Summary */}
       {data.summary && (
-        <section aria-label="professional summary" className={`${sectionMargin} ${sectionPadding} ${borderRadius} bg-white`}>
+        <section aria-label="professional summary" className={`${sectionMargin} ${sectionPadding} ${borderRadius} bg-white break-inside-avoid-page`}>
           <h2 className={`${subheading} text-gray-800 border-b border-gray-200 pb-1 mb-3`}>PROFESSIONAL SUMMARY</h2>
           <p className={`${body} text-gray-700`} style={summaryStyle}>{data.summary}</p>
         </section>
@@ -329,10 +329,10 @@ export default function Template1({ data = {}, fontSizeConfig = {}, spacingConfi
 
       {/* Experience */}
       {experienceList.length > 0 && (
-        <section aria-label="experience" className={section}>
+        <section aria-label="experience" className={`${section} break-inside-avoid-page`}>
           <h2 className={subheading} style={sectionHeaderStyle}>PROFESSIONAL EXPERIENCE</h2>
           {experienceList.map((exp, i) => (
-            <div key={`exp-${i}`} className={item} style={subsectionStyle}>
+            <div key={`exp-${i}`} className={`${item} break-inside-avoid-page`} style={subsectionStyle}>
               <div style={{ marginBottom: '4px' }}>
                 <div className={subheading} style={{ ...jobTitleStyle, display: 'inline', fontWeight: 700 }}>{exp.title}</div>
                 {exp.company && (
@@ -358,10 +358,10 @@ export default function Template1({ data = {}, fontSizeConfig = {}, spacingConfi
 
       {/* Projects */}
       {projectsList.length > 0 && (
-        <section aria-label="projects">
+        <section aria-label="projects" className="break-inside-avoid-page">
           <h2 style={sectionHeaderStyle}>PROJECTS</h2>
           {projectsList.map((project, i) => (
-            <div key={`project-${i}`} style={subsectionStyle}>
+            <div key={`project-${i}`} className="break-inside-avoid-page" style={subsectionStyle}>
               <div style={jobTitleStyle}>{project.title}</div>
               {project.bullets.length > 0 && (
                 <ul style={bulletListStyle}>
@@ -379,10 +379,10 @@ export default function Template1({ data = {}, fontSizeConfig = {}, spacingConfi
 
       {/* Education */}
       {educationList.length > 0 && (
-        <section aria-label="education" className={section}>
+        <section aria-label="education" className={`${section} break-inside-avoid-page`}>
           <h2 className={subheading} style={sectionHeaderStyle}>EDUCATION</h2>
           {educationList.map((edu, idx) => (
-            <div key={`edu-${idx}`} className={item} style={subsectionStyle}>
+            <div key={`edu-${idx}`} className={`${item} break-inside-avoid-page`} style={subsectionStyle}>
               <div style={{ marginBottom: '4px' }}>
                 <div className={subheading} style={{ ...jobTitleStyle, display: 'inline', fontWeight: 700 }}>{edu.degree}</div>
                 {edu.school && (
@@ -408,9 +408,9 @@ export default function Template1({ data = {}, fontSizeConfig = {}, spacingConfi
 
       {/* Certifications */}
       {certificationsList.length > 0 && (
-        <section aria-label="certifications">
+        <section aria-label="certifications" className="break-inside-avoid-page">
           <h2 style={sectionHeaderStyle}>CERTIFICATIONS</h2>
-          <ul style={bulletListStyle}>
+          <ul style={bulletListStyle} className="break-inside-avoid-page">
             {certificationsList.map((cert, i) => (
               <li key={`cert-${i}`} style={bulletItemStyle}>
                 {cert}
@@ -422,9 +422,9 @@ export default function Template1({ data = {}, fontSizeConfig = {}, spacingConfi
 
       {/* Achievements */}
       {achievementsList.length > 0 && (
-        <section aria-label="achievements">
+        <section aria-label="achievements" className="break-inside-avoid-page">
           <h2 style={sectionHeaderStyle}>ACHIEVEMENTS</h2>
-          <ul style={bulletListStyle}>
+          <ul style={bulletListStyle} className="break-inside-avoid-page">
             {achievementsList.map((achievement, i) => (
               <li key={`ach-${i}`} style={bulletItemStyle}>
                 {achievement}
@@ -435,12 +435,12 @@ export default function Template1({ data = {}, fontSizeConfig = {}, spacingConfi
       )}
 
       {/* Skills */}
-      <section aria-label="skills">
+      <section aria-label="skills" className="break-inside-avoid-page">
         <h2 style={sectionHeaderStyle}>SKILLS</h2>
         
         {/* Technical Skills */}
         {technicalSkillsList.length > 0 && (
-          <div style={skillsCategoryStyle}>
+          <div style={skillsCategoryStyle} className="break-inside-avoid-page">
             <span style={skillsLabelStyle}>Technical Skills:</span>
             <span style={skillsValueStyle}>{technicalSkillsList.join(", ")}</span>
           </div>
@@ -448,7 +448,7 @@ export default function Template1({ data = {}, fontSizeConfig = {}, spacingConfi
         
         {/* Non-Technical Skills */}
         {nonTechnicalSkillsList.length > 0 && (
-          <div style={skillsCategoryStyle}>
+          <div style={skillsCategoryStyle} className="break-inside-avoid-page">
             <span style={skillsLabelStyle}>Non-Technical Skills:</span>
             <span style={skillsValueStyle}>{nonTechnicalSkillsList.join(", ")}</span>
           </div>
@@ -456,7 +456,7 @@ export default function Template1({ data = {}, fontSizeConfig = {}, spacingConfi
         
         {/* Languages */}
         {languagesList.length > 0 && (
-          <div style={skillsCategoryStyle}>
+          <div style={skillsCategoryStyle} className="break-inside-avoid-page">
             <span style={skillsLabelStyle}>Languages:</span>
             <span style={skillsValueStyle}>{languagesList.join(", ")}</span>
           </div>
@@ -464,7 +464,7 @@ export default function Template1({ data = {}, fontSizeConfig = {}, spacingConfi
         
         {/* Interests */}
         {interestsList.length > 0 && (
-          <div style={skillsCategoryStyle}>
+          <div style={skillsCategoryStyle} className="break-inside-avoid-page">
             <span style={skillsLabelStyle}>Fields of Interest:</span>
             <span style={skillsValueStyle}>{interestsList.join(", ")}</span>
           </div>

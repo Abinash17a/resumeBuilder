@@ -1,3 +1,5 @@
+import React, { useMemo } from "react";
+import { Monitor, Type, FileText, AlertCircle } from "lucide-react"; // Optional: Install lucide-react for icons
 import Template1 from "../templates/template1";
 import Template2 from "../templates/template2";
 import Template3 from "../templates/template3";
@@ -9,96 +11,127 @@ export default function Preview({
   setFontSize,
   fontSizeConfig
 }) {
+  
+  // Memoize formatting to optimize performance during live typing
+  const formattedData = useMemo(() => {
+    if (!data) return null;
+
+    const formatRange = (start, end, isCurrent) => {
+      if (!start && !end && !isCurrent) return "";
+      return ` (${start}${end ? ' - ' + end : isCurrent ? ' - Present' : ''})`;
+    };
+
+    return {
+      ...data,
+      experience: data.experiences?.map(exp => 
+        `${exp.title} at ${exp.company}${formatRange(exp.startDate, exp.endDate, exp.current)}\n${exp.description || ''}`
+      ).join('\n\n') || "",
+      
+      education: data.educationItems?.map(edu => 
+        `${edu.degree}, ${edu.school}${formatRange(edu.startDate, edu.endDate, edu.current)}${edu.gpa ? `\nGPA: ${edu.gpa}` : ''}${edu.notes ? `\n${edu.notes}` : ''}`
+      ).join('\n\n') || "",
+      
+      skills: [...(data.technicalSkills || []), ...(data.nonTechnicalSkills || [])].join(', '),
+      
+      certifications: data.certifications?.map(cert => 
+        `${cert.name}${cert.issuer ? ` - ${cert.issuer}` : ''}${cert.date ? ` (${cert.date})` : ''}${cert.expiryDate ? ` - Expires: ${cert.expiryDate}` : ''}`
+      ).join('\n') || "",
+      
+      projects: data.projects?.map(proj => 
+        `${proj.title}\n${proj.description}${proj.technologies ? `\nTechnologies: ${proj.technologies}` : ''}${proj.link ? `\nLink: ${proj.link}` : ''}`
+      ).join('\n\n') || "",
+      
+      achievements: data.achievements?.join('\n\n') || "",
+      languages: data.languages?.map(lang => `${lang.language} (${lang.proficiency})`).join(', ') || "",
+      interests: data.interests?.join(', ') || ""
+    };
+  }, [data]);
 
   const renderTemplate = () => {
-    if (template === "template1") return <Template1 data={data} fontSizeConfig={fontSizeConfig} />;
-    if (template === "template2") return <Template2 data={data} fontSizeConfig={fontSizeConfig} />;
-    if (template === "template3") return <Template3 data={data} fontSizeConfig={fontSizeConfig} />;
+    const templates = {
+      template1: <Template1 data={formattedData} fontSizeConfig={fontSizeConfig} />,
+      template2: <Template2 data={formattedData} fontSizeConfig={fontSizeConfig} />,
+      template3: <Template3 data={formattedData} fontSizeConfig={fontSizeConfig} />,
+    };
+
+    if (templates[template]) {
+      return templates[template];
+    }
 
     return (
-      <div className="text-center p-6 sm:p-8 text-gray-500">
-        Select a template to view your resume preview.
+      <div className="flex flex-col items-center justify-center py-20 text-gray-400 animate-pulse">
+        <FileText size={48} strokeWidth={1} className="mb-4" />
+        <p className="text-lg font-medium">Select a template to generate preview</p>
+        <p className="text-sm">Your changes will reflect here in real-time</p>
       </div>
     );
   };
 
   return (
-    // Outer container
-    <div className="
-      flex-1 
-      w-full 
-      p-2 sm:p-4 lg:p-6 
-      bg-gray-50 
-      border-l 
-      border-gray-200 
-      shadow-inner
-    ">
-
-      {/* Header */}
-      <div className="
-        flex 
-        flex-col 
-        sm:flex-row 
-        sm:justify-between 
-        sm:items-center 
-        gap-3 
-        mb-4 
-        border-b 
-        pb-3
-      ">
-        <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-800">
-          Live Resume Preview
-        </h2>
-
-        {/* Font Size Controls */}
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-sm font-medium text-gray-700">Font Size:</span>
-
-          <div className="inline-flex rounded-md shadow-sm">
-            {["small", "medium", "large"].map((size) => (
-              <button
-                key={size}
-                type="button"
-                onClick={() => setFontSize(size)}
-                className={`
-                  px-3 sm:px-4 
-                  py-1.5 
-                  text-xs sm:text-sm 
-                  font-medium 
-                  rounded-md 
-                  transition-all 
-                  ${
-                    fontSize === size
-                      ? "bg-blue-600 text-white shadow-md scale-105"
-                      : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:shadow-sm"
-                  }
-                `}
-              >
-                {size.charAt(0).toUpperCase() + size.slice(1)}
-              </button>
-            ))}
+    <div className="flex-1 flex flex-col h-full bg-slate-100/50">
+      {/* Sticky Header Toolbar */}
+      <header className="sticky top-0 z-10 flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm">
+        <div className="flex items-center gap-2">
+          <div className="p-2 bg-indigo-50 rounded-lg text-indigo-600">
+            <Monitor size={20} />
           </div>
+          <h2 className="text-xl font-bold text-gray-800 tracking-tight">
+            Live Preview
+          </h2>
         </div>
-      </div>
 
-      {/* Resume Mockup Container */}
-      <div className="
-        mx-auto 
-        w-full 
-        max-w-4xl 
-        bg-white 
-        shadow-xl 
-        overflow-hidden 
-        ring-1 
-        ring-gray-900/5
-        p-2 sm:p-4 lg:p-8
-      ">
-        {/* Optional scaling to avoid overflow on very small screens */}
-        <div className="origin-top scale-[0.95] sm:scale-100">
-          {renderTemplate()}
+        {/* Improved Control Group */}
+        <div className="flex items-center gap-3 bg-gray-100 p-1 rounded-xl w-fit">
+          <div className="flex items-center px-2 text-gray-500">
+            <Type size={16} />
+          </div>
+          {["small", "medium", "large"].map((size) => (
+            <button
+              key={size}
+              onClick={() => setFontSize(size)}
+              className={`
+                relative px-4 py-1.5 text-sm font-semibold capitalize transition-all duration-200 rounded-lg
+                ${fontSize === size 
+                  ? "bg-white text-indigo-600 shadow-sm ring-1 ring-black/5" 
+                  : "text-gray-500 hover:text-gray-700 hover:bg-gray-200/50"
+                }
+              `}
+            >
+              {size}
+            </button>
+          ))}
         </div>
-      </div>
+      </header>
 
+      {/* Main Preview Area */}
+      <main className="flex-1 overflow-y-auto p-4 md:p-8 lg:p-12 custom-scrollbar">
+        <div className="mx-auto max-w-[800px]">
+          {/* Shadow & Paper Effect */}
+          <div className="
+            relative
+            bg-white 
+            shadow-[0_20px_50px_rgba(0,0,0,0.1)] 
+            transition-transform 
+            duration-500 
+            ease-out
+            hover:shadow-[0_30px_60px_rgba(0,0,0,0.12)]
+            min-h-[1056px] /* Standard A4 Aspect Ratio Base */
+          ">
+            <div className="origin-top transition-all duration-300">
+              {renderTemplate()}
+            </div>
+            
+            {/* Subtle Page Edge Decor */}
+            <div className="absolute inset-0 pointer-events-none border border-gray-100 ring-1 ring-black/5" />
+          </div>
+          
+          {/* Footer Tip */}
+          <p className="mt-8 text-center text-xs text-gray-400 flex items-center justify-center gap-1">
+            <AlertCircle size={12} />
+            Tip: Use the "Large" font setting for better readability on printed copies.
+          </p>
+        </div>
+      </main>
     </div>
   );
 }
