@@ -321,9 +321,9 @@ export default function Template1({ data = {}, fontSizeConfig = {}, spacingConfi
 
       {/* Summary */}
       {data.summary && (
-        <section aria-label="professional summary" className={`${sectionMargin} ${sectionPadding} ${borderRadius} bg-white break-inside-avoid-page`}>
-          <h2 className={`${subheading} text-gray-800 border-b border-gray-200 pb-1 mb-3`}>PROFESSIONAL SUMMARY</h2>
-          <p className={`${body} text-gray-700`} style={summaryStyle}>{data.summary}</p>
+        <section aria-label="About Me" className={`${sectionMargin} ${sectionPadding} ${borderRadius} bg-white break-inside-avoid-page`}>
+          <h2 className={`${subheading} text-gray-800 border-b border-gray-200 pb-1 mb-3`}>ABOUT ME</h2>
+          <div className={`${body} text-gray-700`} style={summaryStyle} dangerouslySetInnerHTML={{ __html: data.summary }} />
         </section>
       )}
 
@@ -423,7 +423,7 @@ export default function Template1({ data = {}, fontSizeConfig = {}, spacingConfi
       {/* Achievements */}
       {achievementsList.length > 0 && (
         <section aria-label="achievements" className="break-inside-avoid-page">
-          <h2 style={sectionHeaderStyle}>ACHIEVEMENTS</h2>
+          <h2 style={sectionHeaderStyle}>Notable Achievements</h2>
           <ul style={bulletListStyle} className="break-inside-avoid-page">
             {achievementsList.map((achievement, i) => (
               <li key={`ach-${i}`} style={bulletItemStyle}>
@@ -465,7 +465,7 @@ export default function Template1({ data = {}, fontSizeConfig = {}, spacingConfi
         {/* Interests */}
         {interestsList.length > 0 && (
           <div style={skillsCategoryStyle} className="break-inside-avoid-page">
-            <span style={skillsLabelStyle}>Fields of Interest:</span>
+            <span style={skillsLabelStyle}>Professional Interests:</span>
             <span style={skillsValueStyle}>{interestsList.join(", ")}</span>
           </div>
         )}

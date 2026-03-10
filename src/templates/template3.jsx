@@ -45,10 +45,10 @@ export default function Template3({ data }) {
       </div>
       <div style={{ borderTop: "5px solid #222", marginBottom: "15px", breakAfter: 'avoid' }}></div>
 
-      {/* Summary */}
+      {/* About Me */}
       <section style={{ breakInside: 'avoid' }}>
-        <h3 style={sectionTitleStyle}>SUMMARY</h3>
-        <p style={{ fontSize: "0.75em", lineHeight: "1.4", margin: "0 0 8px 0" }}>{data.summary}</p>
+        <h3 style={sectionTitleStyle}>ABOUT ME</h3>
+        <div style={{ fontSize: "0.75em", lineHeight: "1.4", margin: "0 0 8px 0" }} dangerouslySetInnerHTML={{ __html: data.summary }} />
       </section>
 
       {/* Skills */}
