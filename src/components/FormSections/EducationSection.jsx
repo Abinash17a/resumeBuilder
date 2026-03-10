@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useForm } from "../../context/formHooks.js";
 import { actionTypes } from "../../constants/formConstants.js";
+import RichTextEditor from "../RichTextEditor.jsx";
 
 // Consistent Label Component
 const InputLabel = ({ children }) => (
@@ -163,12 +164,11 @@ export default function EducationSection() {
 
         <div className="mb-6">
           <InputLabel>Additional Notes</InputLabel>
-          <textarea
-            placeholder="Honors, awards, or specific coursework..."
+          <RichTextEditor
             value={currentEducation.notes}
-            onChange={(e) => setCurrentEducation({...currentEducation, notes: e.target.value})}
+            onChange={(value) => setCurrentEducation({...currentEducation, notes: value})}
+            placeholder="Honors, awards, or specific coursework..."
             rows="3"
-            className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm transition-all focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none resize-none"
           />
         </div>
 
@@ -200,7 +200,7 @@ export default function EducationSection() {
                       GPA: {edu.gpa}
                     </span>
                   )}
-                  {edu.notes && <p className="text-sm text-gray-600 mt-3 leading-relaxed">{edu.notes}</p>}
+                  {edu.notes && <div className="text-sm text-gray-600 mt-3 leading-relaxed" dangerouslySetInnerHTML={{ __html: edu.notes }} />}
                 </div>
               </div>
               <button

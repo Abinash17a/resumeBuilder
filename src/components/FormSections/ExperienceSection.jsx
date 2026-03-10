@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useForm } from "../../context/formHooks.js";
 import { actionTypes } from "../../constants/formConstants.js";
+import RichTextEditor from "../RichTextEditor.jsx";
 
 // Consistent Label Component
 const InputLabel = ({ children }) => (
@@ -115,12 +116,11 @@ export default function ExperienceSection() {
 
         <div className="mb-6">
           <InputLabel>Description & Achievements</InputLabel>
-          <textarea
-            placeholder="Describe your role and quantify your impact (e.g., 'Led a team of 5 to increase revenue by 15%')"
+          <RichTextEditor
             value={currentExperience.description}
-            onChange={(e) => setCurrentExperience({...currentExperience, description: e.target.value})}
+            onChange={(value) => setCurrentExperience({...currentExperience, description: value})}
+            placeholder="Describe your role and quantify your impact (e.g., 'Led a team of 5 to increase revenue by 15%')"
             rows="4"
-            className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm transition-all focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none resize-none"
           />
         </div>
 
@@ -148,9 +148,7 @@ export default function ExperienceSection() {
                     {exp.startDate} — {exp.current ? 'Present' : exp.endDate}
                   </p>
                   {exp.description && (
-                    <p className="text-sm text-gray-600 mt-4 leading-relaxed whitespace-pre-line">
-                      {exp.description}
-                    </p>
+                    <div className="text-sm text-gray-600 mt-4 leading-relaxed" dangerouslySetInnerHTML={{ __html: exp.description }} />
                   )}
                 </div>
               </div>

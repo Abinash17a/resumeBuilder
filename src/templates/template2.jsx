@@ -361,9 +361,9 @@ export default function Template1({ data = {}, fontSizeConfig = {}, spacingConfi
 
       {/* Summary */}
       {data.summary && (
-        <section aria-label="professional summary" className={`${sectionMargin} ${sectionPadding} ${borderRadius} bg-white`}>
-          <h2 className={`${subheading} text-gray-800 border-b border-gray-200 pb-1 mb-3`}>PROFESSIONAL SUMMARY</h2>
-          <p className={`${body} text-gray-700`} style={summaryStyle}>{data.summary}</p>
+        <section aria-label="About Me" className={`${sectionMargin} ${sectionPadding} ${borderRadius} bg-white`}>
+          <h2 className={`${subheading} text-gray-800 border-b border-gray-200 pb-1 mb-3`}>About Me</h2>
+          <div className={`${body} text-gray-700`} style={summaryStyle} dangerouslySetInnerHTML={{ __html: data.summary }} />
         </section>
       )}
 
@@ -463,7 +463,7 @@ export default function Template1({ data = {}, fontSizeConfig = {}, spacingConfi
       {/* Achievements */}
       {achievementsList.length > 0 && (
         <section aria-label="achievements">
-          <h2 style={sectionHeaderStyle}>ACHIEVEMENTS</h2>
+          <h2 style={sectionHeaderStyle}>Notable Achievements</h2>
           <ul style={bulletListStyle}>
             {achievementsList.map((achievement, i) => (
               <li key={`ach-${i}`} style={bulletItemStyle}>
@@ -505,7 +505,7 @@ export default function Template1({ data = {}, fontSizeConfig = {}, spacingConfi
         {/* Interests */}
         {interestsList.length > 0 && (
           <div style={skillsCategoryStyle}>
-            <span style={skillsLabelStyle}>Fields of Interest:</span>
+            <span style={skillsLabelStyle}>Professional Interests:</span>
             <span style={skillsValueStyle}>{interestsList.join(", ")}</span>
           </div>
         )}

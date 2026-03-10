@@ -1,5 +1,6 @@
 import React from "react";
 import { useForm } from "../../context/formHooks.js";
+import RichTextEditor from "../RichTextEditor.jsx";
 import { actionTypes } from "../../constants/formConstants.js";
 
 // Reusable Input Component for consistency
@@ -27,6 +28,13 @@ export default function BasicInfoSection({ template }) {
     dispatch({
       type: actionTypes.UPDATE_BASIC_INFO,
       payload: { [name]: value }
+    });
+  };
+
+  const handleSummaryChange = (value) => {
+    dispatch({
+      type: actionTypes.UPDATE_BASIC_INFO,
+      payload: { summary: value }
     });
   };
 
@@ -115,14 +123,12 @@ export default function BasicInfoSection({ template }) {
       </div>
 
       <div className="mt-6">
-        <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">Professional Summary</label>
-        <textarea
-          name="summary"
+        <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1.5">About Me</label>
+        <RichTextEditor
           value={state.summary || ""}
-          onChange={handleBasicInfoChange}
-          rows="4"
-          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 text-sm transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 focus:bg-white placeholder:text-gray-400 resize-none"
+          onChange={handleSummaryChange}
           placeholder="Briefly describe your career path and key strengths..."
+          rows="4"
         />
       </div>
     </div>
