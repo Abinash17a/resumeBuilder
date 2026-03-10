@@ -32,17 +32,54 @@ const RichTextEditor = ({
     }
   };
 
-  // Initialize content and detect formatting
+  // Helper function to place cursor at end
+  const placeCaretAtEnd = (el) => {
+    el.focus();
+    if (typeof window.getSelection != "undefined" && typeof document.createRange != "undefined") {
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      range.collapse(false);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    } else if (typeof document.body.createTextRange != "undefined") {
+      const textRange = document.body.createTextRange();
+      textRange.moveToElementText(el);
+      textRange.collapse(false);
+      textRange.select();
+    }
+  };
+
+  // Initialize content on mount
   useEffect(() => {
-    if (editorRef.current && value !== editorRef.current.innerHTML) {
-      editorRef.current.innerHTML = value;
-      // Update char count in next tick to avoid cascading renders
+    if (editorRef.current && !editorRef.current.innerHTML) {
+      editorRef.current.innerHTML = value || `<span class="text-gray-400">${placeholder}</span>`;
+      
+      // Update char count asynchronously
       setTimeout(() => {
-        const textContent = value.replace(/<[^>]*>/g, '');
+        const textContent = (value || '').replace(/<[^>]*>/g, '');
         setCharCount(textContent.length);
       }, 0);
     }
-  }, [value]);
+  }, [value, placeholder]); // Only run on mount
+
+  // Initialize content and detect formatting
+  useEffect(() => {
+    if (editorRef.current) {
+      const currentValue = editorRef.current.innerHTML;
+      
+      // Only update if the value actually changed and editor is not focused
+      if (value !== currentValue && document.activeElement !== editorRef.current) {
+        editorRef.current.innerHTML = value || `<span class="text-gray-400">${placeholder}</span>`;
+        
+        // Update char count asynchronously to avoid cascading renders
+        setTimeout(() => {
+          const textContent = (value || '').replace(/<[^>]*>/g, '');
+          setCharCount(textContent.length);
+        }, 0);
+      }
+    }
+  }, [value, placeholder]);
 
   const execCommand = (command, value = null) => {
     document.execCommand(command, false, value);
@@ -195,13 +232,11 @@ const RichTextEditor = ({
         onKeyUp={detectFormatting}
         className="min-h-25 p-4 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 text-gray-900 text-sm"
         style={{ minHeight: `${rows * 25}px` }}
-        dangerouslySetInnerHTML={{ 
-          __html: value || `<span class="text-gray-400">${placeholder}</span>` 
-        }}
         onFocus={(e) => {
           // Clear placeholder on focus if it's the only content
           if (e.target.innerHTML === `<span class="text-gray-400">${placeholder}</span>`) {
             e.target.innerHTML = '';
+            placeCaretAtEnd(e.target);
           }
         }}
         onBlur={(e) => {
