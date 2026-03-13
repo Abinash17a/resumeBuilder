@@ -15,6 +15,7 @@ export default function ExperienceSection() {
   const [currentExperience, setCurrentExperience] = useState({
     title: "",
     company: "",
+    location: "",
     startDate: "",
     endDate: "",
     current: false,
@@ -33,6 +34,7 @@ export default function ExperienceSection() {
       setCurrentExperience({
         title: "",
         company: "",
+        location: "",
         startDate: "",
         endDate: "",
         current: false,
@@ -79,6 +81,15 @@ export default function ExperienceSection() {
               placeholder="e.g. Meta / Freelance"
               value={currentExperience.company}
               onChange={(e) => setCurrentExperience({...currentExperience, company: e.target.value})}
+              className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm transition-all focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none"
+            />
+          </div>
+          <div>
+            <InputLabel>Location</InputLabel>
+            <input
+              placeholder="e.g. San Francisco, CA / Remote"
+              value={currentExperience.location}
+              onChange={(e) => setCurrentExperience({...currentExperience, location: e.target.value})}
               className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm transition-all focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none"
             />
           </div>
@@ -144,6 +155,9 @@ export default function ExperienceSection() {
                 <div>
                   <h4 className="font-bold text-gray-900 text-lg">{exp.title}</h4>
                   <p className="text-sm font-semibold text-indigo-600">{exp.company}</p>
+                  {exp.location && (
+                    <p className="text-sm text-gray-600 mt-1">{exp.location}</p>
+                  )}
                   <p className="text-xs font-bold text-gray-400 mt-1 uppercase tracking-tight">
                     {exp.startDate} — {exp.current ? 'Present' : exp.endDate}
                   </p>

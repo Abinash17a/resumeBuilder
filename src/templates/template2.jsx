@@ -31,116 +31,32 @@ export default function Template1({ data = {}, fontSizeConfig = {}, spacingConfi
       .filter(Boolean)
   }
 
-  // Parse experience entries with structured format
-  const parseExperience = (exp) => {
-    if (!exp) return [];
-
-    // Split by double newline to separate different experiences
-    const experienceBlocks = exp.split('\n\n').filter(block => block.trim() !== '');
-    const experiences = [];
-
-    experienceBlocks.forEach(block => {
-      const lines = block.split('\n').filter(line => line.trim() !== '');
-      if (lines.length === 0) return;
-
-      const firstLine = lines[0].trim();
-
-      // Try to find the first bullet point to determine where the title/company ends
-      let firstBulletIndex = lines.findIndex(line =>
-        line.trim().startsWith('-') ||
-        line.trim().startsWith('•') ||
-        line.trim().startsWith('*')
-      );
-
-      // If no bullets, use all lines as description
-      if (firstBulletIndex === -1) firstBulletIndex = lines.length;
-
-      // First line is the title and company
-      const titleCompanyMatch = firstLine.match(/^(.*?)\s+at\s+(.*)/) || [null, firstLine, ''];
-      const title = titleCompanyMatch[1] || firstLine;
-      const company = titleCompanyMatch[2] || '';
-      
-      // The rest are bullet points
-      const bullets = [];
-      for (let i = 1; i < firstBulletIndex; i++) {
-        // If there are lines between title and bullets, add them as description
-        const line = lines[i].trim();
-        if (line) {
-          bullets.push(line.replace(/^[-•*]\s*/, '').trim());
-        }
-      }
-      
-      // Add the actual bullet points
-      for (let i = firstBulletIndex; i < lines.length; i++) {
-        const line = lines[i].trim();
-        if (line) {
-          bullets.push(line.replace(/^[-•*]\s*/, '').trim());
-        }
-      }
-      
-      experiences.push({
-        title: title.trim(),
-        company: company.trim(),
-        bullets: bullets.filter(b => b)
-      });
-    });
+  // Parse experience entries from array structure
+  const parseExperience = (experiences) => {
+    if (!experiences || !Array.isArray(experiences)) return [];
     
-    return experiences;
+    return experiences.map(exp => ({
+      title: exp.title || '',
+      company: exp.company || '',
+      location: exp.location || '',
+      startDate: exp.startDate || '',
+      endDate: exp.endDate || '',
+      bullets: exp.description ? [exp.description] : []
+    }));
   };
 
-  // Parse education entries with structured format
-  const parseEducation = (edu) => {
-    if (!edu) return [];
+  // Parse education entries from array structure
+  const parseEducation = (educationItems) => {
+    if (!educationItems || !Array.isArray(educationItems)) return [];
     
-    // Split by double newline to separate different education entries
-    const educationBlocks = edu.split('\n\n').filter(block => block.trim() !== '');
-    const educations = [];
-    
-    educationBlocks.forEach(block => {
-      const lines = block.split('\n').filter(line => line.trim() !== '');
-      if (lines.length === 0) return;
-      
-      // First line is the degree and school
-      const firstLine = lines[0].trim();
-      const commaIndex = firstLine.indexOf(',');
-      
-      let degree = '';
-      let school = '';
-      
-      if (commaIndex > -1) {
-        degree = firstLine.substring(0, commaIndex).trim();
-        school = firstLine.substring(commaIndex + 1).trim();
-      } else {
-        // If no comma, try to split by common separators
-        const parts = firstLine.split(/[,\t]/);
-        if (parts.length > 1) {
-          degree = parts[0].trim();
-          school = parts.slice(1).join(', ').trim();
-        } else {
-          // If no separator, treat the whole line as degree
-          degree = firstLine;
-        }
-      }
-
-      // The rest are notes/bullet points
-      const notes = [];
-      for (let i = 1; i < lines.length; i++) {
-        const line = lines[i].trim();
-        if (line) {
-          // Remove bullet points if present and trim
-          const note = line.replace(/^[-•*]\s*/, '').trim();
-          if (note) notes.push(note);
-        }
-      }
-
-      educations.push({
-        degree: degree,
-        school: school,
-        notes: notes
-      });
-    });
-
-    return educations;
+    return educationItems.map(edu => ({
+      degree: edu.degree || '',
+      school: edu.school || '',
+      location: edu.location || '',
+      startDate: edu.startDate || '',
+      endDate: edu.endDate || '',
+      notes: edu.notes ? [edu.notes] : []
+    }));
   };
 
   const formatAchievements = (text) => {
@@ -175,10 +91,9 @@ export default function Template1({ data = {}, fontSizeConfig = {}, spacingConfi
 
   const languagesList = parseList(data.languages);
   const interestsList = parseList(data.interests);
-  const experienceList = parseExperience(data.experience);
+  const experienceList = parseExperience(data.experiences);
   console.log("experience list",experienceList)
-  console.log("data-----",data)
-  const educationList = parseEducation(data.education);
+  const educationList = parseEducation(data.educationItems);
   const certificationsList = data.certifications ? data.certifications.split("\n").filter(Boolean) : [];
   const achievementsList = formatAchievements(data.achievements);
   const projectsList = formatProjects(data.projects || "");
@@ -186,21 +101,10 @@ export default function Template1({ data = {}, fontSizeConfig = {}, spacingConfi
   // Parse technical and non-technical skills separately
   const parseTechnicalSkills = (skills) => {
     if (!skills) return [];
-    // Look for technical skills pattern or split by common separators
-    const allSkills = parseList(skills);
-    // For now, we'll assume the first half are technical, but this could be enhanced
-    // In a real implementation, you might want to mark skills as technical/non-technical
-    return allSkills.slice(0, Math.ceil(allSkills.length / 2));
-  };
-
-  const parseNonTechnicalSkills = (skills) => {
-    if (!skills) return [];
-    const allSkills = parseList(skills);
-    return allSkills.slice(Math.ceil(allSkills.length / 2));
+    return parseList(skills);
   };
 
   const technicalSkillsList = parseTechnicalSkills(data.skills);
-  const nonTechnicalSkillsList = parseNonTechnicalSkills(data.skills);
 
   const containerStyle = {
     width: "100%",
@@ -269,14 +173,14 @@ export default function Template1({ data = {}, fontSizeConfig = {}, spacingConfi
     textTransform: "uppercase",
     letterSpacing: "1px",
     color: "#1a1a1a",
-    marginTop: "clamp(12px, 3vw, 16px)",
-    marginBottom: "clamp(6px, 2vw, 8px)",
+    marginTop: "clamp(8px, 2vw, 12px)",
+    marginBottom: "clamp(4px, 1vw, 6px)",
     paddingBottom: "4px",
     borderBottom: "1px solid #1a1a1a",
   }
 
   const subsectionStyle = {
-    marginBottom: "clamp(12px, 3vw, 16px)",
+    marginBottom: "clamp(8px, 2vw, 12px)",
   }
 
   const jobTitleStyle = {
@@ -294,7 +198,7 @@ export default function Template1({ data = {}, fontSizeConfig = {}, spacingConfi
   }
 
   const bulletItemStyle = {
-    marginBottom: "4px",
+    marginBottom: "2px",
   }
 
   const summaryStyle = {
@@ -326,14 +230,77 @@ export default function Template1({ data = {}, fontSizeConfig = {}, spacingConfi
       style={containerStyle}
       className={`w-full max-w-[900px] mx-auto px-2 sm:px-4 md:px-6 lg:px-8 xl:px-10 py-3 sm:py-4 md:py-5 lg:py-6 ${lineHeight} ${letterSpacing} text-gray-800 print:px-6 print:py-4 print:max-w-none print:shadow-none print:rounded-none`}
     >
+      {/* ATS-friendly hidden content */}
+      <div style={{ position: 'absolute', left: '-9999px', top: '-9999px' }} aria-hidden="true">
+        <h1>{data.name || "CHARLES BLOOMBERG"}</h1>
+        <h2>Professional Summary</h2>
+        <p>{data.summary}</p>
+        <h2>Work Experience</h2>
+        {experienceList.map((exp, i) => (
+          <div key={`ats-exp-${i}`}>
+            <h3>{exp.title}</h3>
+            <p>{exp.company}</p>
+            <p>{exp.location}</p>
+            <p>{exp.startDate} - {exp.endDate}</p>
+            {exp.bullets && exp.bullets.map((bullet, j) => (
+              <p key={`ats-exp-${i}-${j}`}>{bullet}</p>
+            ))}
+          </div>
+        ))}
+        <h2>Education</h2>
+        {educationList.map((edu, idx) => (
+          <div key={`ats-edu-${idx}`}>
+            <h3>{edu.degree}</h3>
+            <p>{edu.school}</p>
+            <p>{edu.location}</p>
+            <p>{edu.startDate} - {edu.endDate}</p>
+            {edu.notes && edu.notes.map((note, j) => (
+              <p key={`ats-edu-${idx}-${j}`}>{note}</p>
+            ))}
+          </div>
+        ))}
+        <h2>Skills</h2>
+        <p>{technicalSkillsList.join(', ')}</p>
+        <h2>Contact Information</h2>
+        <p>Email: {data.email}</p>
+        <p>Phone: {data.phone}</p>
+        <p>LinkedIn: {data.linkedin}</p>
+        <p>Location: {data.city}</p>
+      </div>
+
       {/* Header with profile picture on right */}
       <header style={headerStyle} className={`${sectionMargin} ${sectionPadding} ${borderRadius}`}>
+        {/* Hidden ATS-friendly contact info */}
+        <div style={{ position: 'absolute', left: '-9999px', top: '-9999px' }} aria-hidden="true">
+          {data.city && <span>City: {data.city}</span>}
+          {data.email && <span>Email: {data.email}</span>}
+          {data.phone && <span>Phone: {data.phone}</span>}
+          {data.linkedin && <span>LinkedIn: {data.linkedin}</span>}
+        </div>
+        
         <div style={headerLeftStyle}>
           <h1 className={`${heading} text-gray-900`} style={nameStyle}>{data.name || "CHARLES BLOOMBERG"}</h1>
           <div className={`${body} ${itemMargin} text-gray-700`} style={contactStyle}>
-            {data.email && <span>{data.email}</span>}
-            {data.phone && <span>{data.phone}</span>}
-            {data.linkedin && <span>{data.linkedin}</span>}
+            {data.city && (
+              <span style={{ marginRight: '8px', marginBottom: '2px' }}>
+                {data.city}
+              </span>
+            )}
+            {data.email && (
+              <span style={{ marginRight: '8px', marginBottom: '2px' }}>
+                {data.email}
+              </span>
+            )}
+            {data.phone && (
+              <span style={{ marginRight: '8px', marginBottom: '2px' }}>
+                {data.phone}
+              </span>
+            )}
+            {data.linkedin && (
+              <span>
+                {data.linkedin}
+              </span>
+            )}
           </div>
         </div>
         <div style={headerRightStyle}>
@@ -361,24 +328,37 @@ export default function Template1({ data = {}, fontSizeConfig = {}, spacingConfi
 
       {/* Summary */}
       {data.summary && (
-        <section aria-label="About Me" className={`${sectionMargin} ${sectionPadding} ${borderRadius} bg-white`}>
-          <h2 className={`${subheading} text-gray-800 border-b border-gray-200 pb-1 mb-3`}>About Me</h2>
+        <section aria-label="Professional Summary" className={`${sectionMargin} ${sectionPadding} ${borderRadius} bg-white`}>
+          <h2 className={`${subheading} text-gray-800 border-b border-gray-200 pb-1 mb-3`}>Professional Summary</h2>
           <div className={`${body} text-gray-700`} style={summaryStyle} dangerouslySetInnerHTML={{ __html: data.summary }} />
         </section>
       )}
 
       {/* Experience */}
       {experienceList.length > 0 && (
-        <section aria-label="experience" className={section}>
-          <h2 className={subheading} style={sectionHeaderStyle}>PROFESSIONAL EXPERIENCE</h2>
+        <section aria-label="Work Experience" className={section}>
+          <h2 className={subheading} style={sectionHeaderStyle}>WORK EXPERIENCE</h2>
           {experienceList.map((exp, i) => (
             <div key={`exp-${i}`} className={item} style={subsectionStyle}>
               <div style={{ marginBottom: '4px' }}>
-                <div className={subheading} style={{ ...jobTitleStyle, display: 'inline', fontWeight: 700 }}>{exp.title}</div>
+                <h3 className={subheading} style={{ ...jobTitleStyle, display: 'inline', fontWeight: 700 }}>{exp.title}</h3>
                 {exp.company && (
                   <span>
                     {' at '}
                     <span style={{ fontStyle: 'italic' }}>{exp.company}</span>
+                  </span>
+                )}
+                {(exp.startDate || exp.endDate) && (
+                  <span style={{ fontSize: '0.9em', color: '#666' }}>
+                    {' • '}
+                    {exp.startDate && exp.endDate ? `${exp.startDate} - ${exp.endDate}` : 
+                     exp.startDate ? `${exp.startDate} - Present` : 
+                     exp.endDate ? `Until ${exp.endDate}` : ''}
+                  </span>
+                )}
+                {exp.location && (
+                  <span style={{ fontSize: '0.9em', color: '#666' }}>
+                    {' • '}{exp.location}
                   </span>
                 )}
               </div>
@@ -419,16 +399,29 @@ export default function Template1({ data = {}, fontSizeConfig = {}, spacingConfi
 
       {/* Education */}
       {educationList.length > 0 && (
-        <section aria-label="education" className={section}>
+        <section aria-label="Education" className={section}>
           <h2 className={subheading} style={sectionHeaderStyle}>EDUCATION</h2>
           {educationList.map((edu, idx) => (
             <div key={`edu-${idx}`} className={item} style={subsectionStyle}>
               <div style={{ marginBottom: '4px' }}>
-                <div className={subheading} style={{ ...jobTitleStyle, display: 'inline', fontWeight: 700 }}>{edu.degree}</div>
+                <h3 className={subheading} style={{ ...jobTitleStyle, display: 'inline', fontWeight: 700 }}>{edu.degree}</h3>
                 {edu.school && (
                   <span>
                     {', '}
                     <span style={{ fontStyle: 'italic' }}>{edu.school}</span>
+                  </span>
+                )}
+                {(edu.startDate || edu.endDate) && (
+                  <span style={{ fontSize: '0.9em', color: '#666' }}>
+                    {' • '}
+                    {edu.startDate && edu.endDate ? `${edu.startDate} - ${edu.endDate}` : 
+                     edu.startDate ? `${edu.startDate} - Present` : 
+                     edu.endDate ? `Until ${edu.endDate}` : ''}
+                  </span>
+                )}
+                {edu.location && (
+                  <span style={{ fontSize: '0.9em', color: '#666' }}>
+                    {' • '}{edu.location}
                   </span>
                 )}
               </div>
@@ -475,22 +468,14 @@ export default function Template1({ data = {}, fontSizeConfig = {}, spacingConfi
       )}
 
       {/* Skills */}
-      <section aria-label="skills">
+      <section aria-label="Skills">
         <h2 style={sectionHeaderStyle}>SKILLS</h2>
         
-        {/* Technical Skills */}
+        {/* All Skills */}
         {technicalSkillsList.length > 0 && (
           <div style={skillsCategoryStyle}>
             <span style={skillsLabelStyle}>Technical Skills:</span>
             <span style={skillsValueStyle}>{technicalSkillsList.join(", ")}</span>
-          </div>
-        )}
-        
-        {/* Non-Technical Skills */}
-        {nonTechnicalSkillsList.length > 0 && (
-          <div style={skillsCategoryStyle}>
-            <span style={skillsLabelStyle}>Non-Technical Skills:</span>
-            <span style={skillsValueStyle}>{nonTechnicalSkillsList.join(", ")}</span>
           </div>
         )}
         
