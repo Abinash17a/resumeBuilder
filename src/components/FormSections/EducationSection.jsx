@@ -17,6 +17,7 @@ export default function EducationSection() {
     degree: "",
     specialization: "",
     school: "",
+    location: "",
     startDate: "",
     endDate: "",
     current: false,
@@ -44,7 +45,7 @@ export default function EducationSection() {
       });
       setCurrentEducation({
         degreeType: "", degree: "", specialization: "", school: "",
-        startDate: "", endDate: "", current: false, gpa: "", notes: ""
+        location: "", startDate: "", endDate: "", current: false, gpa: "", notes: ""
       });
     }
   };
@@ -96,6 +97,16 @@ export default function EducationSection() {
               placeholder="e.g. Harvard University"
               value={currentEducation.school}
               onChange={(e) => setCurrentEducation({...currentEducation, school: e.target.value})}
+              className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm transition-all focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none"
+            />
+          </div>
+
+          <div>
+            <InputLabel>Location</InputLabel>
+            <input
+              placeholder="e.g. Cambridge, MA / Online"
+              value={currentEducation.location}
+              onChange={(e) => setCurrentEducation({...currentEducation, location: e.target.value})}
               className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm transition-all focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none"
             />
           </div>
@@ -192,6 +203,9 @@ export default function EducationSection() {
                 <div>
                   <h4 className="font-bold text-gray-900">{edu.degree}</h4>
                   <p className="text-sm font-semibold text-indigo-600">{edu.school}</p>
+                  {edu.location && (
+                    <p className="text-sm text-gray-600 mt-1">{edu.location}</p>
+                  )}
                   <p className="text-xs font-bold text-gray-400 mt-1 uppercase tracking-tight">
                     {edu.startDate} — {edu.current ? 'Present' : edu.endDate}
                   </p>

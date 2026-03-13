@@ -7,6 +7,7 @@ export const dummyResumeData = {
   email: "john.doe@example.com",
   phone: "(555) 123-4567",
   linkedin: "https://linkedin.com/in/johndoe",
+  city: "San Francisco, CA",
   summary: "Experienced software developer with 5+ years of expertise in full-stack development, specializing in React, Node.js, and cloud technologies. Passionate about building scalable applications and leading development teams.",
   profileImage: "",
   
@@ -16,6 +17,7 @@ export const dummyResumeData = {
       id: Date.now() + 1,
       title: "Senior Software Engineer",
       company: "Tech Solutions Inc.",
+      location: "San Francisco, CA",
       startDate: "2022-01-01",
       endDate: "",
       current: true,
@@ -25,6 +27,7 @@ export const dummyResumeData = {
       id: Date.now() + 2,
       title: "Full Stack Developer",
       company: "Digital Innovations Ltd",
+      location: "New York, NY",
       startDate: "2020-06-01",
       endDate: "2021-12-31",
       current: false,
@@ -40,6 +43,7 @@ export const dummyResumeData = {
       degree: "B.Tech in Computer Science",
       specialization: "Computer Science",
       school: "University of Technology",
+      location: "Cambridge, MA",
       startDate: "2016-08-01",
       endDate: "2020-05-31",
       current: false,
@@ -48,17 +52,15 @@ export const dummyResumeData = {
     }
   ],
   
-  // Technical Skills
+  // All Skills (unified)
   technicalSkills: [
     "JavaScript", "React", "Node.js", "Python", "TypeScript", "MongoDB", 
-    "PostgreSQL", "Docker", "AWS", "Git", "REST APIs", "GraphQL"
-  ],
-  
-  // Non-Technical Skills
-  nonTechnicalSkills: [
+    "PostgreSQL", "Docker", "AWS", "Git", "REST APIs", "GraphQL",
     "Project Management", "Team Leadership", "Communication", "Problem Solving",
     "Agile Methodology", "Public Speaking", "Client Relations"
   ],
+  
+  nonTechnicalSkills: [],
   
   // Certifications
   certifications: [

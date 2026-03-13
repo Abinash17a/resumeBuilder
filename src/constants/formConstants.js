@@ -54,6 +54,7 @@ export const initialState = {
   email: "",
   phone: "",
   linkedin: "",
+  city: "",
   summary: "",
   profileImage: "",
   // Arrays for dynamic sections
